@@ -58,11 +58,12 @@ int main(){
                 continue;
             }
 
-            if (index == line_length){ //if we reach the max length of line
+            if (index >= line_length){ //if we reach the max length of line
 
                 if (space == 1){ //see if we're coming off a space character
 
                     fprintf(output_file, "%s", buffer); //just print the entire line
+                    fprintf(output_file, "\n");
                     buffer[0] = byte;
                     index = 1;
                     buffer[index] = '\0';
@@ -78,6 +79,7 @@ int main(){
 
                         buffer[cutoff] = '\0'; //mark cutoff as end of string
                         fprintf(output_file, "%s", buffer);
+                        fprintf(output_file, "\n");
 
                         //shift leftover chars to front of buffer
                         index = 0; cutoff++;
