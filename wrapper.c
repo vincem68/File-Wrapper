@@ -95,6 +95,7 @@ int main(){
                     }
                 }
                 cutoff = -1; //since there's no space char, reset cutoff marker
+                new_line = 0;
                 continue;
             }
 
@@ -102,6 +103,7 @@ int main(){
             index++;
             buffer[index] = '\0';
             space = 0;
+            new_line = 0;
 
         }
         
@@ -110,9 +112,10 @@ int main(){
     //print whatever is left
     fprintf(output_file, "%s", buffer);
 
+    //close the file pointers
     fclose(output_file);
     fclose(input_file);
-    free(buffer);
+    free(buffer); //free memory
 
     return EXIT_SUCCESS;
 }
