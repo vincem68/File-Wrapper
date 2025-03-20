@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "C: gcc build active file",
+        "type": "shell",
+        "command": "gcc",
+        "args": [
+          "-g",            // Debugging information
+          "${file}",       // Current file being compiled
+          "-o",            // Output file
+          "${fileDirname}/wrapper" // Output executable name (can be changed)
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"],
+        "detail": "Generated task by Debugger"
+      }
+    ]
+  }
+  

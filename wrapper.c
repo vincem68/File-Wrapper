@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
 int main(){
 
@@ -39,6 +41,10 @@ int main(){
             }
 
             space = 1; //mark a streak of spaces
+            buffer[index] = ' '; //mark next char as space
+            cutoff = index; //mark this as cutoff since its the newest space char 
+            index++;
+            buffer[index] = '\0';
 
         } else { //else, the char is text
 
@@ -46,56 +52,54 @@ int main(){
                 new_line = 0; space = 0; cutoff = -1;
                 fprintf(output_file, "%s", buffer);
                 fprintf(output_file, "\n\n");
-                index = 0; buffer[index] = '\0';
+                buffer[0] = byte;
+                index = 1;
+                buffer[index] = '\0';
                 continue;
             }
 
-            if (space == 1) { //if we only got a newline
-                new_line = 0; space = 0;
-                cutoff = index;
-                buffer[index] = ' ';
-                index++;
+            if (index == line_length){ //if we reach the max length of line
+
+                if (space == 1){ //see if we're coming off a space character
+
+                    fprintf(output_file, "%s", buffer); //just print the entire line
+                    buffer[0] = byte;
+                    index = 1;
+                    buffer[index] = '\0';
+                    space = 0;
+
+                } else { //else see what the last space char was
+
+                    if (cutoff == -1){ //if we have no cutoff marker, can't make it work. Exit
+
+                        return EXIT_FAILURE;
+
+                    } else { //find last cutoff marker and print up to that
+
+                        buffer[cutoff] = '\0'; //mark cutoff as end of string
+                        fprintf(output_file, "%s", buffer);
+
+                        //shift leftover chars to front of buffer
+                        index = 0; cutoff++;
+                        while (cutoff < line_length){
+                            buffer[index] = buffer[cutoff];
+                            index++; cutoff++;
+                        }
+
+                        //add the current byte
+                        buffer[index] = byte;
+                        index++;
+                        buffer[index] = '\0';
+                    }
+                }
+                cutoff = -1; //since there's no space char, reset cutoff marker
+                continue;
             }
 
             buffer[index] = byte;
             index++;
             buffer[index] = '\0';
-
-            if (index == line_length) { //if we reach the max amount of chars
-
-                byte = getc(input_file); //get next char
-
-                if (isspace(byte) || byte == EOF){ //see if space or EOF
-
-                    if (byte == '\n'){ //if newline, increment counter and loop to find next
-                        new_line++;
-                    }
-
-                    fprintf(output_file, "%s", buffer); //output the entire buffer to file
-
-                    index = 0; //reset index and buffer
-                    buffer[index] = '\0';
-
-                } else { //if char is text
-
-                    if (cutoff == -1) { //if no space in buffer, not valid. exit
-                        return EXIT_FAILURE;
-                    }
-
-                    buffer[cutoff] = '\0'; //print chars in buffer up to last space in buffer
-                    fprintf(output_file, "%s", buffer);
-
-                    //shift leftover chars to front of buffer
-                    index = 0; cutoff++;
-                    while (cutoff < line_length){
-                        buffer[index] = buffer[cutoff];
-                        index++; cutoff++;
-                    }
-                    buffer[index] = '\0';
-                }
-
-                cutoff = -1; //reset cutoff counter
-            }
+            space = 0;
 
         }
         

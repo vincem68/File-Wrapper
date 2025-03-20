@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug C program",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/wrapper",  // Make sure this matches your output file
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+          {
+            "description": "Enable pretty-printing for gdb",
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ],
+        "miDebuggerPath": "C:/MinGW/bin/gdb.exe",  // Path to your gdb debugger
+        "preLaunchTask": "C: gcc build active file",  // Task name for compiling
+        "serverLaunchTimeout": 2000,
+        "filterStderr": true,
+        "filterStdout": true
+      }
+    ]
+  }
+  
