@@ -3,10 +3,21 @@
 #include <ctype.h>
 #include <string.h>
 
-int main(){
+int main(int argc, char **argv){
 
-    int line_length = 50; //length of lines in output file
-    FILE *input_file = fopen("notes.txt", "r"); //FILE pointer to input file
+    if (argc != 3){
+        printf("Invalid number of arguments.\n");
+        return EXIT_FAILURE;
+    }
+
+    int line_length = (int)argv[2]; //length of lines in output file
+    FILE *input_file = fopen((char *)argv[1], "r"); //FILE pointer to input file
+
+    if (input_file == NULL){
+        printf("Could not open file or file does not exist.\n");
+        return EXIT_FAILURE;
+    }
+
     FILE *output_file = fopen("output.txt", "w"); //output file, should create/overwrite file
 
     if (input_file == NULL){ //exit if input file does not exist
