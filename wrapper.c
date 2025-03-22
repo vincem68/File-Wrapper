@@ -10,7 +10,7 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
 
-    int line_length = (int) argv[2]; //length of lines in output file
+    int line_length = atoi(argv[2]); //length of lines in output file
     FILE *input_file = fopen(argv[1], "r"); //FILE pointer to input file
 
     if (input_file == NULL){
@@ -18,7 +18,7 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
 
-    FILE *output_file = fopen("output.txt", "w"); //output file, should create/overwrite file
+    FILE *output_file = fopen("test-results/output.txt", "w"); //output file, should create/overwrite file
 
     //initialize buffer to store chars. Is length of inputted length plus one for \0
     char *buffer = malloc(sizeof(char) * (line_length + 1)); //account for null char

@@ -1,5 +1,6 @@
 ww.c
 wrapper.exe
-output.txt
-notes.txt
+a.exe
 Makefile.mk
+test-cases/
+test-results/
