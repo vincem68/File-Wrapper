@@ -10,8 +10,8 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
 
-    int line_length = (int)argv[2]; //length of lines in output file
-    FILE *input_file = fopen((char *)argv[1], "r"); //FILE pointer to input file
+    int line_length = (int) argv[2]; //length of lines in output file
+    FILE *input_file = fopen(argv[1], "r"); //FILE pointer to input file
 
     if (input_file == NULL){
         printf("Could not open file or file does not exist.\n");
@@ -19,11 +19,6 @@ int main(int argc, char **argv){
     }
 
     FILE *output_file = fopen("output.txt", "w"); //output file, should create/overwrite file
-
-    if (input_file == NULL){ //exit if input file does not exist
-        printf("No file exists.\n");
-        return EXIT_FAILURE;
-    }
 
     //initialize buffer to store chars. Is length of inputted length plus one for \0
     char *buffer = malloc(sizeof(char) * (line_length + 1)); //account for null char
@@ -52,7 +47,6 @@ int main(int argc, char **argv){
             }
 
             space = 1; //mark a streak of spaces
-            buffer[index] = ' '; //mark next char as space
             cutoff = index; //mark this as cutoff since its the newest space char 
             index++;
             buffer[index] = '\0';
