@@ -47,6 +47,7 @@ int main(int argc, char **argv){
             }
 
             space = 1; //mark a streak of spaces
+            buffer[index] = ' '; //mark next char as space
             cutoff = index; //mark this as cutoff since its the newest space char 
             index++;
             buffer[index] = '\0';
