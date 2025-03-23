@@ -5,6 +5,7 @@
 
 int main(int argc, char **argv){
 
+    //check if 2 arguments, exit otherwise
     if (argc != 3){
         printf("Invalid number of arguments.\n");
         return EXIT_FAILURE;
@@ -18,7 +19,18 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
 
-    FILE *output_file = fopen("test-results/output.txt", "w"); //output file, should create/overwrite file
+    //assemble name for output file
+    char* outputFileName = malloc(sizeof(char) * (strlen(argv[1]) + 10)); //malloc memory
+    outputFileName[0] = '\0';
+    char *start = (char *)memchr(argv[1], '/', strlen(argv[1]));
+    char *end = (char *)memchr(argv[1], '.', strlen(argv[1]));
+    *end = '\0';
+    strcat(outputFileName, "test-results/");
+    strcat(outputFileName, start + 1);
+    strcat(outputFileName, "_output.txt");
+
+    FILE *output_file = fopen(outputFileName, "w"); //output file, should create/overwrite file
+    free(outputFileName);
 
     //initialize buffer to store chars. Is length of inputted length plus one for \0
     char *buffer = malloc(sizeof(char) * (line_length + 1)); //account for null char
