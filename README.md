@@ -3,8 +3,7 @@
 This is a revision of a systems programming project I did about 4 years ago back in the Fall of 2020.
 
 The program is a File Wrapper. Given the arguments of a name of a text file and a number of 1 or greater, the program will reformat the file to fit the text into lines 
-containing no more characters than the number argument given. Consecutive spaces will be eliminated (if you come across something like "example      example", it will become 
-"example example" in the output file). This will include any space characters such as tabs, newlines, etc. The exception is that paragrapghs will be separated by two newlines.
+containing no more characters than the number argument given. Consecutive spaces will be eliminated (if you come across something like "example \t \t example", it will become "example example" in the output file). This will include any space characters such as tabs, newlines, etc. The exception is that paragrapghs will be separated by two newlines.
 If the input file has two or more newline characters within consective whitespace, the output file will keep those paragrapghs. One newline will just be turned to a regular
 ' ' character. 
 
