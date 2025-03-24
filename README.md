@@ -15,6 +15,6 @@ Words cannot be cut off. If the file has a word that has more characters than th
 
 Note: This is a project I've revisited to make better. I worked with a partner on the original version which is ww.c, but was not happy about it since it was not perfect
 and was very messy code containing about 560 lines of code. The revised version, wrapper.c, aimed to be a lot more neat, less redundant, and easier to understand while being
-bug free and more efficient in runtime and memory management. 
+bug free and more efficient in runtime and memory management. Take a look at the two files to compare with each other, and how much better at programming I've become since.
 
 This is still being worked on. The main intention should be working (wrapping a file), now I aim to have it red multiple files in a given directory. 
