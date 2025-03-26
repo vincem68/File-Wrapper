@@ -2,4 +2,4 @@ wrapper.exe
 a.exe
 Makefile.mk
 test-cases/
-test-results/
+output_files/

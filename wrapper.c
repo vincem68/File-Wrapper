@@ -3,35 +3,27 @@
 #include <ctype.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/types.h>
 
-int main(int argc, char **argv){
 
-    //check if 2 arguments, exit otherwise
-    if (argc != 3){
-        printf("Invalid number of arguments.\n");
-        return EXIT_FAILURE;
-    }
-
-    int line_length = atoi(argv[2]); //length of lines in output file
-    FILE *input_file = fopen(argv[1], "r"); //FILE pointer to input file
-
-    if (input_file == NULL){
-        printf("Could not open file or file does not exist.\n");
-        return EXIT_FAILURE;
-    }
+/**
+ * This will be the method we call individually on each file in a directory. 
+ * Takes a file pointer and wraps the file. 
+ */
+int wrapFile(FILE *input_file, char *input_file_name, int line_length) {
 
     //assemble name for output file
-    char* outputFileName = malloc(sizeof(char) * (strlen(argv[1]) + 10)); //malloc memory
-    outputFileName[0] = '\0';
-    char *start = (char *)memchr(argv[1], '/', strlen(argv[1]));
-    char *end = (char *)memchr(argv[1], '.', strlen(argv[1]));
+    char *start = (char*)strrchr(input_file_name, '/'); //get last occurrence of / in file path
+    char *end = (char *)memchr(input_file_name, '.', strlen(input_file_name)); //find . in file name
     *end = '\0';
-    strcat(outputFileName, "test-results/");
-    strcat(outputFileName, start + 1);
-    strcat(outputFileName, "_output.txt");
+    char *output_file_name = malloc(sizeof(char) * (24 + strlen(input_file_name)));
+    output_file_name[0] = '\0';
+    strcat(output_file_name, "output_files/");
+    strcat(output_file_name, start + 1);
+    strcat(output_file_name, "_output.txt");
 
-    FILE *output_file = fopen(outputFileName, "w"); //output file, should create/overwrite file
-    free(outputFileName);
+    FILE *output_file = fopen(output_file_name, "w"); //output file, should create/overwrite file
+    free(output_file_name);
 
     //initialize buffer to store chars. Is length of inputted length plus one for \0
     char *buffer = malloc(sizeof(char) * (line_length + 1)); //account for null char
@@ -92,7 +84,7 @@ int main(int argc, char **argv){
 
                     if (cutoff == -1){ //if we have no cutoff marker, can't make it work. Exit
 
-                        return EXIT_FAILURE;
+                        return 1;
 
                     } else { //find last cutoff marker and print up to that
 
@@ -135,6 +127,70 @@ int main(int argc, char **argv){
     fclose(output_file);
     fclose(input_file);
     free(buffer); //free memory
+
+    return 0;
+}
+
+
+/**
+ * Main method that is called when the program starts. The main purpose is to handle command line arguments.
+ * Check to make sure no invalid arguments are input, and check to see if the input is a directory or file.
+ */
+int main(int argc, char **argv){
+
+    //check if 2 arguments, exit otherwise
+    if (argc != 3){
+        printf("Invalid number of arguments.\n");
+        return EXIT_FAILURE;
+    }
+
+    if (atoi(argv[2]) <= 0) { //if given number is 0 or less, exit
+        printf("Invalid required character limit entered.\n");
+        return EXIT_FAILURE;
+    }
+
+    DIR *dir = opendir(argv[1]); //first lets see if its a directory.
+    if (dir){
+
+        struct dirent *entry; //struct to hold file entries in directory
+        while ((entry = readdir(dir)) != NULL){ //go through every entry
+            //need to combine working dir name and the file entry name
+            char *file_name = malloc(sizeof(char) * (strlen(argv[1]) + strlen(entry->d_name) + 2));
+            file_name[0] = '\0';
+            strcat(file_name, argv[1]);
+            strcat(file_name, "/");
+            strcat(file_name, entry->d_name);
+
+            FILE *file = fopen(file_name, "r"); //open file entry
+            if (file == NULL) {
+                free(file_name);
+                continue;
+            }
+            if (wrapFile(file, file_name, atoi(argv[2])) == 1){
+                printf("A file in the directory had a word larger than the entered character limit.\n");
+                free(file_name);
+                return EXIT_FAILURE;
+            }
+            free(file_name);
+        }
+
+        closedir(dir);
+        return EXIT_SUCCESS;
+
+    }
+
+    int line_length = atoi(argv[2]); //length of lines in output file
+    FILE *input_file = fopen(argv[1], "r"); //FILE pointer to input file
+
+    if (input_file == NULL){
+        printf("Could not find file or directory.\n");
+        return EXIT_FAILURE;
+    }
+
+    if (wrapFile(input_file, argv[1], atoi(argv[2])) == 1){ //exit failure if returns 1 (fail)
+        printf("A word in the file is too long for the inputted character limit.\n");
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
