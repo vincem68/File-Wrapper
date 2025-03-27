@@ -149,6 +149,12 @@ int main(int argc, char **argv){
         return EXIT_FAILURE;
     }
 
+    //check here to see if we have the output_files directory made, if not make it
+    DIR *checkDir = opendir("output_files");
+    if (checkDir){
+        closedir(checkDir);
+    } else { mkdir("output_files"); }
+
     DIR *dir = opendir(argv[1]); //first lets see if its a directory.
     if (dir){
 
